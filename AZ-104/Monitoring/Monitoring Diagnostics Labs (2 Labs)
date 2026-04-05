@@ -1,0 +1,25 @@
+Monitoring Diagnostics Labs (2 Labs)
+
+Lab M1 Diagnostic Settings Log Analytics Alerts
+Dauer: 45–60 min
+Lernziel: Diagnostic Settings konfigurieren, Logs in Log Analytics senden, Alert Rule erstellen.
+Kurzschritte:
+Erstelle Log Analytics Workspace; setze Diagnostic Settings für VM/Storage; erstelle Metric Alert und Log Alert.
+Validierung:
+CLI: az monitor diagnostic-settings list --resource <res> ; az monitor metrics alert list -g $rg
+Erwartet: Logs erscheinen in Workspace; Alerts feuern bei Testbedingungen.
+Häufige Fehler + Fix:
+Fehler: Keine Logs → Fix: Diagnostic Settings nicht gesetzt oder Workspace falsch.
+Prüfungsfrage: Wann nutzt man Log Alert statt Metric Alert?
+
+Lab M2 Network Watcher NSG Flow Logs Connection Troubleshoot
+Dauer: 30–45 min
+Lernziel: NSG Flow Logs aktivieren, Network Watcher Connection Troubleshoot nutzen, Traffic‑Analyse.
+Kurzschritte:
+Aktiviere Network Watcher; setze NSG Flow Logs zu Storage Account/Log Analytics; führe Connection Troubleshoot aus.
+Validierung:
+CLI: az network watcher show-topology ; az network watcher connection-monitor test
+Erwartet: Flow Logs zeigen erlaubte/abgelehnte Pakete; Troubleshoot liefert Pfad.
+Häufige Fehler + Fix:
+Fehler: Keine Flow Logs → Fix: Storage Account Logging/Permissions prüfen.
+Prüfungsfrage: Wie findest du heraus, ob ein NSG eine Verbindung blockiert?
