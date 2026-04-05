@@ -1,0 +1,40 @@
+Networking Labs (3 Labs)
+
+Lab N1 SNAT Exhaustion NAT Gateway vs Load Balancer
+Dauer: 60–90 min
+Lernziel: Verstehen, wie SNAT‑Ports entstehen, wie NAT Gateway SNAT löst und wann LB Standard nicht ausreicht.
+Kurzschritte:
+Erstelle VNet mit Subnet, deploy VM Scale Set ohne NAT Gateway; simuliere viele ausgehende Verbindungen.
+Beobachte SNAT‑Fehler; ersetze durch NAT Gateway; vergleiche Verhalten.
+Validierung:
+CLI: az network public-ip list -g $rg ; az network nat gateway show -g $rg -n $nat
+Erwartet: keine SNAT‑Fehler nach NAT Gateway; ausgehende Verbindungen stabil.
+Häufige Fehler + Fix:
+Fehler: Weiterhin SNAT‑Exhaustion → Fix: NAT Gateway nicht an Subnet gebunden; binde korrekt.
+Prüfungsfrage: Warum würde ein Standard Load Balancer nicht automatisch SNAT‑Exhaustion verhindern?
+
+
+Lab N2 Load Balancer Outbound Rules und NAT Gateway Vergleich
+Dauer: 45–60 min
+Lernziel: Unterschied Standard vs Basic LB, Outbound rules, NAT Gateway Integration.
+Kurzschritte:
+Deploy zwei VMs hinter Standard LB; teste ausgehenden Traffic; konfiguriere Outbound rules; ersetze durch NAT Gateway.
+Validierung:
+CLI: az network lb outbound-rule list -g $rg --lb-name $lb
+Erwartet: Outbound rule zeigt zugeordnete Frontend IPs; NAT Gateway liefert konsistente Source IP.
+Häufige Fehler + Fix:
+Fehler: Falsche Frontend IP in Outbound rule → Fix: Outbound rule an richtige Frontend IP koppeln.
+Prüfungsfrage: Wann ist eine Outbound Rule am Load Balancer nötig statt NAT Gateway?
+
+Lab N3 UDR Peering Private Endpoint DNS Flow
+Dauer: 90 min
+Lernziel: UDR vs Systemroute, VNet Peering Nicht‑Transitivität, Private Endpoint DNS Auflösung und conditional forwarding.
+Kurzschritte:
+Erstelle Hub‑Spoke VNet, setze UDR in Spoke, peere Spoke mit Hub; deploy Private Endpoint in Hub; teste DNS Auflösung aus Spoke.
+Nutze Network Watcher Connection Troubleshoot und NSG Flow Logs.
+Validierung:
+CLI: az network route-table route list -g $rg --route-table-name $rt ; nslookup <privatename> aus VM.
+Erwartet: Private Endpoint FQDN löst auf private IP; Traffic folgt UDR wenn vorhanden.
+Häufige Fehler + Fix:
+Fehler: DNS löst öffentlich → Fix: Private DNS Zone nicht verlinkt oder conditional forwarder fehlt.
+Prüfungsfrage: Warum ist VNet Peering nicht transitiv und wie löst man Hub‑Spoke Transit?
