@@ -1,0 +1,25 @@
+Compute Labs (2 Labs)
+
+Lab C1 VMSS Images Extensions und Scale
+Dauer: 60–90 min
+Lernziel: VMSS erstellen, Custom Image verwenden, Extensions deployen, Skalierung testen.
+Kurzschritte:
+Erstelle VM, capture Image, deploy VMSS mit Image; füge Custom Script Extension hinzu; skaliere Instanzen.
+Validierung:
+CLI: az vmss list-instances -g $rg --name $vmss ; az vm extension list --vm-name <vm>
+Erwartet: Instanzen starten mit Extension ausgeführt; Scale‑Out/Scale‑In funktioniert.
+Häufige Fehler + Fix:
+Fehler: Extension schlägt fehl → Fix: Prüfe VM Agent, Netzwerkzugang zu Storage.
+Prüfungsfrage: Wann ist VMSS gegenüber einzelnen VMs vorzuziehen?
+
+Lab C2 Disks Backup Restore Snapshot
+Dauer: 45–60 min
+Lernziel: Managed Disk Snapshot, Disk Restore, Recovery Services Vault Backup/Restore.
+Kurzschritte:
+Erstelle Snapshot einer Disk; erstelle neue Disk aus Snapshot; simuliere VM Restore via Recovery Services Vault.
+Validierung:
+CLI: az snapshot create ; az disk create --source <snapshot>
+Erwartet: Wiederhergestellte VM bootet; Daten intakt.
+Häufige Fehler + Fix:
+Fehler: Restore fehlschlägt wegen Region → Fix: Snapshot/Backup Region prüfen.
+Prüfungsfrage: Unterschied Snapshot vs Backup in Azure?
