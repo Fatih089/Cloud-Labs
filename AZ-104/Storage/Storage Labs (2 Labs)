@@ -1,0 +1,25 @@
+Storage Labs (2 Labs)
+
+Lab S1 SAS RBAC Private Endpoint für Storage
+Dauer: 45–60 min
+Lernziel: Unterschied SAS Token Arten, RBAC vs SAS, Private Endpoint für Storage und DNS‑Konfiguration.
+Kurzschritte:
+Erstelle Storage Account; generiere Account SAS und Service SAS; setze Private Endpoint; konfiguriere Private DNS Zone.
+Validierung:
+CLI: az storage account generate-sas --account-name $sa ; az network private-endpoint show -g $rg -n $pe
+Erwartet: SAS funktioniert lokal; über Private Endpoint nur private IP erreichbar.
+Häufige Fehler + Fix:
+Fehler: SAS funktioniert nicht über Private Endpoint → Fix: Firewall/Network Restriction oder DNS falsch.
+Prüfungsfrage: Wann ist RBAC einer SAS vorzuziehen?
+
+Lab S2 File Sync Lifecycle Management
+Dauer: 45–60 min
+Lernziel: File Sync Setup, Cloud Tiering, Lifecycle Policies.
+Kurzschritte:
+Deploy Storage Account, File Share, Storage Sync Service, register Server endpoint; konfiguriere Tiering und Lifecycle.
+Validierung:
+Portal: File Sync Status; CLI: az storagesync sync-group show
+Erwartet: Dateien synchronisiert; Tiering reduziert Storage‑Kosten.
+Häufige Fehler + Fix:
+Fehler: Sync bleibt pending → Fix: Agent nicht registriert oder Netzwerkzugang fehlt.
+Prüfungsfrage: Wie reduziert Cloud Tiering Kosten und welche Risiken gibt es?
