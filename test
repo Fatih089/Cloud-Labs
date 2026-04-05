@@ -1,0 +1,12 @@
+az104/
+   network/
+      lab-01
+      lab-02
+   storage/
+      lab-01
+   identity/
+      lab-01
+   compute/
+      lab-01
+   monitoring/
+      lab-01
