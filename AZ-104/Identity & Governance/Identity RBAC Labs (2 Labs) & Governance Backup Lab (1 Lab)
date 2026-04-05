@@ -1,0 +1,40 @@
+Identity RBAC Labs (2 Labs)
+
+Lab I1 RBAC Scopes Custom Roles und Delegation
+Dauer: 45–60 min
+Lernziel: Role Assignment auf Subscription/ResourceGroup/Resource Ebene; Erstellen Custom Role.
+Kurzschritte:
+Erstelle Custom Role JSON; az role definition create; weise Role zu auf RG und Resource.
+Validierung:
+CLI: az role assignment list --assignee <user> ; az role definition list --name <role>
+Erwartet: Benutzer hat nur die erlaubten Aktionen; Test durch Versuch einer nicht erlaubten Aktion.
+Häufige Fehler + Fix:
+Fehler: Role zu breit definiert → Fix: Permissions einschränken, Principle of Least Privilege.
+Prüfungsfrage: Wann nutzt man Custom Role statt Built‑in Role?
+
+Lab I2 PIM Conditional Access Szenario
+Dauer: 45–60 min
+Lernziel: PIM Aktivierung, Just‑in‑Time Privilege, Conditional Access Policy mit MFA.
+Kurzschritte:
+Aktiviere PIM für Owner/Contributor; erstelle Conditional Access Policy für MFA bei externem Zugriff.
+Validierung:
+Portal: PIM Aktivierungs‑Logs; Testanmeldung von externem Standort → MFA Aufforderung.
+Erwartet: PIM‑Anforderung funktioniert; Conditional Access erzwingt MFA.
+Häufige Fehler + Fix:
+Fehler: Policy blockiert Admins → Fix: Exclude Break‑Glass Account.
+Prüfungsfrage: Warum ist PIM wichtig für Produktionszugriffe?
+
+
+Governance Backup Lab (1 Lab)
+
+Lab G1 Policies Management Groups Resource Locks Recovery Vault
+Dauer: 60–90 min
+Lernziel: Management Groups Struktur, Azure Policy (Deny/Audit/DeployIfNotExists), Resource Locks, Recovery Services Vault Backup Policy.
+Kurzschritte:
+Erstelle Management Group Hierarchie; deploy Policy Definition und Assignment; setze Resource Lock; konfiguriere Recovery Services Vault Backup Policy.
+Validierung:
+CLI: az policy assignment list ; az group lock list -g $rg ; az backup vault show -g $rg -n $vault
+Erwartet: Policy erzwingt Regel; Lock verhindert Löschung; Backup Policy aktiv.
+Häufige Fehler + Fix:
+Fehler: Policy wirkt nicht → Fix: Scope falsch gesetzt oder Exclusions vorhanden.
+Prüfungsfrage: Wann nutzt man Management Groups statt nur Subscriptions?
