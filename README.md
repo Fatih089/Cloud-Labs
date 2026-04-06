@@ -1,6 +1,6 @@
-##Cloud-Labs
+## Cloud-Labs
 
-##Abdeckung nach Themen (Übersicht)
+## Abdeckung nach Themen (Übersicht)
 Thema	Labs	Wichtigste Prüfungsaspekte abgedeckt
 Networking	3	SNAT/NAT Gateway; LB Outbound; UDR, Peering, Private Endpoint DNS
 Storage	2	SAS vs RBAC; Private Link; File Sync; Lifecycle
