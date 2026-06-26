@@ -1,193 +1,209 @@
-# Lab N1 – SNAT Exhaustion: NAT Gateway vs Load Balancer
+# Lab N1 - SNAT Exhaustion: NAT Gateway vs. Standard Load Balancer
 
-**Dauer:** 60–90 Minuten  
-**Ziel:** Verstehen, wie SNAT-Ports entstehen, warum ein Standard Load Balancer an Grenzen stoßen kann und wie ein Azure NAT Gateway SNAT-Exhaustion verhindert.
+## Overview
 
----
+This lab demonstrates how Azure NAT Gateway improves outbound connectivity compared to a Standard Load Balancer. It also explains how SNAT port exhaustion can occur under high outbound traffic and why Azure recommends using a NAT Gateway for scalable outbound connections.
 
-# 1. Umgebung vorbereiten
+## Lab Objectives
 
-## Resource Group erstellen
+After completing this lab, you will be able to:
 
-Portal → **Resource groups** → **Create**
+- Understand how SNAT ports are used for outbound connectivity
+- Explain the limitations of a Standard Load Balancer
+- Deploy and configure an Azure NAT Gateway
+- Associate a NAT Gateway with a subnet
+- Validate outbound connectivity before and after deploying a NAT Gateway
 
-- **Name:** `rg-n1-snat`
-- **Region:** `West Europe`
+## Azure Services
 
-Create.
+- Azure Resource Group
+- Azure Virtual Network
+- Azure Subnet
+- Azure Virtual Machine Scale Set
+- Azure Standard Load Balancer
+- Azure NAT Gateway
+- Azure Public IP Address
 
----
+## Step 1 - Prepare the Environment
 
-## Virtual Network erstellen
+### Create a Resource Group
 
-Portal → **Virtual networks** → **Create**
+| Setting | Value |
+|---------|-------|
+| Name | `rg-n1-snat` |
+| Region | `West Europe` |
 
-- **Name:** `vnet-n1`
-- **Address space:** `10.10.0.0/16`
+### Create a Virtual Network
 
-Subnet erstellen:
+| Setting | Value |
+|---------|-------|
+| Name | `vnet-n1` |
+| Address Space | `10.10.0.0/16` |
 
-- **Subnet name:** `vm-subnet`
-- **Address range:** `10.10.1.0/24`
+Create the following subnet:
 
-Create.
+| Setting | Value |
+|---------|-------|
+| Name | `vm-subnet` |
+| Address Range | `10.10.1.0/24` |
 
----
+## Step 2 - Deploy a Virtual Machine Scale Set
 
-# 2. VM Scale Set ohne NAT Gateway deployen
+Deploy a Virtual Machine Scale Set without a NAT Gateway.
 
-Portal → **Virtual machine scale sets** → **Create**
+### Basic Settings
 
-## Basics
+| Setting | Value |
+|---------|-------|
+| Name | `vmss-n1` |
+| Image | Ubuntu LTS |
+| Instances | 2-3 |
+| Authentication | SSH Key or Password |
 
-- **Name:** `vmss-n1`
-- **Image:** Ubuntu LTS
-- **Instances:** 2–3
-- **Authentication:** SSH key oder Password
+### Networking
 
-## Networking
+| Setting | Value |
+|---------|-------|
+| Virtual Network | `vnet-n1` |
+| Subnet | `vm-subnet` |
+| Public IP | None |
+| Load Balancer | Standard Load Balancer |
 
-- **Virtual Network:** `vnet-n1`
-- **Subnet:** `vm-subnet`
-- **Public IP:** None
-- **Load Balancer:** Standard Load Balancer (auto-create)
+At this stage, Azure provides outbound connectivity through the Standard Load Balancer using SNAT.
 
-Azure stellt automatisch **Outbound Connectivity über Load Balancer SNAT** bereit.
+## Step 3 - Generate Outbound Traffic
 
-Create.
+Connect to one of the VMSS instances using Azure Bastion or a jump box.
 
----
-
-# 3. Outbound Traffic erzeugen
-
-Verbinde dich mit einer VMSS-Instanz über **Azure Bastion** oder eine **Jumpbox**.
-
-Führe folgenden Befehl aus, um viele kurzlebige Outbound-Verbindungen zu erzeugen.
+Generate a large number of outbound connections:
 
 ```bash
 for i in {1..20000}; do curl -m 1 https://microsoft.com >/dev/null 2>&1 & done
 ```
 
-Alternativ stabiler:
+Alternative:
 
 ```bash
 seq 1 20000 | xargs -n1 -P200 curl -m 1 https://microsoft.com >/dev/null 2>&1
 ```
 
----
+## Step 4 - Observe SNAT Behavior
 
-# 4. SNAT Verhalten beobachten
+A Standard Load Balancer provides only a limited number of outbound SNAT ports for each backend instance.
 
-Der **Standard Load Balancer** weist jedem Backend-Host eine begrenzte Anzahl an **SNAT-Ports** zu.
+Under heavy outbound traffic you may observe:
 
-Wenn viele Outbound-Verbindungen gleichzeitig erstellt werden:
+- Connection timeouts
+- Failed outbound connections
+- SNAT port exhaustion
 
-- Einige Verbindungen können fehlschlagen
-- Timeouts können auftreten
-- SNAT-Ports können erschöpft sein
-
-Du kannst auch die verwendete Public IP prüfen:
+Check the current outbound public IP:
 
 ```bash
 curl ifconfig.me
 ```
 
-Erwartetes Ergebnis:
+Expected result:
 
-Die **Frontend Public IP des Load Balancers** wird als Source IP verwendet.
+The returned IP address should be the public frontend IP of the Standard Load Balancer.
 
----
+## Step 5 - Deploy an Azure NAT Gateway
 
-# 5. NAT Gateway deployen
+### Create a Public IP Address
 
-## Public IP erstellen
+| Setting | Value |
+|---------|-------|
+| Name | `pip-nat` |
+| SKU | Standard |
+| Assignment | Static |
 
-Portal → **Public IP addresses** → **Create**
+### Create the NAT Gateway
 
-- **Name:** `pip-nat`
-- **SKU:** Standard
-- **Assignment:** Static
-- **Resource group:** `rg-n1-snat`
+| Setting | Value |
+|---------|-------|
+| Name | `nat-n1` |
+| Public IP | `pip-nat` |
+| Idle Timeout | 4 Minutes |
 
-Create.
+### Associate the NAT Gateway
 
----
+Associate the NAT Gateway with the `vm-subnet` subnet.
 
-## NAT Gateway erstellen
+> Note: Azure NAT Gateway is associated with a subnet, not with individual virtual machines.
 
-Portal → **NAT gateways** → **Create**
+## Step 6 - Validate the Solution
 
-- **Name:** `nat-n1`
-- **Public IP configuration:** Add existing → `pip-nat`
-- **Idle timeout:** 4 minutes (default)
-
-Create.
-
----
-
-## NAT Gateway mit Subnet verknüpfen
-
-Portal → **Virtual networks** → `vnet-n1`
-
-Dann:
-
-**Subnets → vm-subnet**
-
-Konfiguration:
-
-- **NAT Gateway:** `nat-n1`
-
-Save.
-
-Wichtig:
-
-Ein NAT Gateway wirkt auf **Subnet-Ebene**.
-
----
-
-# 6. Lösung validieren
-
-Führe den Test erneut aus:
+Run the outbound traffic test again:
 
 ```bash
 for i in {1..20000}; do curl -m 1 https://microsoft.com >/dev/null 2>&1 & done
 ```
 
-Überprüfe erneut die Public IP:
+Check the outbound IP address again:
 
 ```bash
 curl ifconfig.me
 ```
 
-Erwartetes Ergebnis:
+Expected results:
 
-- Die Outbound IP sollte jetzt **pip-nat** sein
-- Das NAT Gateway stellt einen **deutlich größeren SNAT-Port-Pool** bereit
-- Verbindungsfehler sollten deutlich seltener auftreten
+- The outbound IP address should now be the NAT Gateway Public IP
+- Outbound connectivity should remain stable
+- Significantly more SNAT ports are available
 
----
+## Architecture
 
-# 7. Wichtigste Erkenntnisse
+```text
+Internet
+    |
+    v
+Public IP
+    |
+    v
+NAT Gateway
+    |
+    v
+Virtual Network
+    |
+    v
+Subnet
+    |
+    v
+Virtual Machine Scale Set
+```
 
-**Standard Load Balancer**
+## Key Takeaways
 
-- Begrenzte Anzahl an SNAT-Ports pro Backend-Instanz
-- Kann bei hoher Outbound-Last zu **SNAT Exhaustion** führen
+### Standard Load Balancer
 
-**NAT Gateway**
+- Provides limited outbound SNAT ports
+- Suitable for general workloads
+- May experience SNAT exhaustion under high outbound traffic
 
-- Entwickelt für **skalierbare Outbound Connectivity**
-- Stellt **64.000 SNAT-Ports pro Public IP** bereit
-- Empfohlene Lösung für Workloads mit vielen Outbound-Verbindungen
+### Azure NAT Gateway
 
----
+- Designed for scalable outbound connectivity
+- Provides up to 64,000 SNAT ports per Public IP
+- Recommended for workloads with high outbound connection requirements
 
-# 8. Cleanup
+## Security Considerations
 
-Lösche alle Ressourcen, um Kosten zu vermeiden.
+- No inbound Public IP is assigned to the VM Scale Set
+- Outbound connectivity is managed using Azure NAT Gateway
+- Standard SKU networking resources are used
+
+## Cost Considerations
+
+To minimize Azure costs:
+
+- Delete the Resource Group after completing the lab
+- Use only the required number of VM instances
+- Stop or remove resources when they are no longer needed
+
+## Cleanup
+
+Delete all resources after completing the lab:
 
 ```bash
 az group delete --name rg-n1-snat --yes --no-wait
 ```
-
-das das einzige was ich bei Network gemacht habe readme fehlt 
