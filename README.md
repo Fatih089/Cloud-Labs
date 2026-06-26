@@ -1,11 +1,34 @@
-## Cloud-Labs
+Cloud-Labs
 
-## Abdeckung nach Themen (Übersicht)
-Thema	Labs	Wichtigste Prüfungsaspekte:
+Hands-on Azure labs built while preparing for the AZ-104 certification.
 
-- Networking	3	SNAT/NAT Gateway; LB Outbound; UDR, Peering, Private Endpoint DNS
-- Storage	2	SAS vs RBAC; Private Link; File Sync; Lifecycle
-- Identity RBAC	2	Role Scope; Custom Roles; PIM; Conditional Access
-- Compute	2	VMSS, Images, Extensions; Snapshots, Backup/Restore
-- Monitoring Diagnostics	2	Diagnostic Settings → Log Analytics; Alerts; NSG Flow Logs
-- Governance Backup	1	Policies, Management Groups, Locks, Recovery Vault
+## Objectives
+
+- Azure Administration
+- Infrastructure as Code
+- Azure Networking
+- Identity & Access Management
+- Monitoring
+- Cost Awareness
+- Security Best Practices
+
+## Technologies
+
+- Azure
+- Bicep
+- PowerShell
+- Azure CLI
+- Azure Monitor
+- RBAC
+- Virtual Machines
+- VNets
+- Storage Accounts
+
+## Lab Overview
+
+| Lab | Topic | Status |
+|------|-------|--------|
+| N1 | SNAT vs NAT Gateway | ✅ |
+| N2 | VNet Peering | ✅ |
+| S1 | Storage RBAC | ✅ |
+...
