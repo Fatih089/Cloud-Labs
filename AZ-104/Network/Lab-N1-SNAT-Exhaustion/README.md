@@ -1,4 +1,3 @@
-
 # Azure Networking Labs
 
 This folder contains my hands-on Azure networking labs created while preparing for the Microsoft AZ-104 certification.
