@@ -6,7 +6,7 @@ Die in diesem Lab erstellten Ressourcen werden von den nachfolgenden Networking-
 
 ---
 
-## 🛠️ Umgesetzt
+##  Umgesetzt
 
 * Azure RBAC und Scope-Vererbung
 * System-assigned Managed Identity für `VM-A`
@@ -18,7 +18,7 @@ Die in diesem Lab erstellten Ressourcen werden von den nachfolgenden Networking-
 
 ---
 
-## ☁️ Zentrale Ressourcen
+##  Zentrale Ressourcen
 
 | Ressource            | Typ             | Resource Group      | Region      |
 | -------------------- | --------------- | ------------------- | ----------- |
@@ -33,7 +33,7 @@ Die in diesem Lab erstellten Ressourcen werden von den nachfolgenden Networking-
 
 ---
 
-## 🧠 Architekturentscheidungen
+##  Architekturentscheidungen
 
 ### Least Privilege bei Azure RBAC
 
@@ -64,7 +64,7 @@ Resource Locks wären für diese Anforderung ungeeignet, da sie vorhandene Resso
 
 ---
 
-## ✅ Validierung
+##  Validierung
 
 Folgende Szenarien wurden praktisch überprüft:
 
@@ -79,7 +79,7 @@ Folgende Szenarien wurden praktisch überprüft:
 
 ---
 
-## ⚠️ Lab-Einschränkungen
+##  Lab-Einschränkungen
 
 Die Umgebung wird innerhalb eines bestehenden Azure-Tenants betrieben.
 
@@ -92,7 +92,7 @@ Nicht erfolgreich getestete Szenarien werden im Projekt nicht als erfolgreich um
 
 ---
 
-## ➡️ Weiterverwendung
+##  Weiterverwendung
 
 Die vorhandene Basis wurde anschließend direkt im Networking-Lab weiterverwendet:
 
