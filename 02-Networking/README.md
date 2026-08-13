@@ -1,4 +1,4 @@
-# 🌐 02 – Networking
+#  02 – Networking
 
 Erweiterung der bestehenden Azure-Umgebung um **Netzwerksegmentierung, VNet Peering, Network Security, Private DNS und Routing-Troubleshooting**.
 
@@ -6,7 +6,7 @@ Die vorhandene Infrastruktur aus Identity & Governance wurde bewusst weiterverwe
 
 ---
 
-## 🏗️ Netzwerkarchitektur
+##  Netzwerkarchitektur
 
 ### `vnet-westeurope-1`
 
@@ -23,7 +23,7 @@ Beide Virtual Networks befinden sich in **West Europe** und sind bidirektional �
 
 ---
 
-## 🛠️ Umgesetzt
+##  Umgesetzt
 
 * Erweiterung des bestehenden VNets um ein separates Application Subnet
 * Bidirektionales VNet Peering
@@ -41,7 +41,7 @@ Beide Virtual Networks befinden sich in **West Europe** und sind bidirektional �
 
 ---
 
-## 🔐 Network Security
+##  Network Security
 
 Für `VM-A` wurden Security Controls auf zwei Ebenen betrachtet:
 
@@ -64,7 +64,7 @@ Dadurch können zukünftige Server anhand ihrer logischen Rolle gruppiert werden
 
 ---
 
-## 🔗 VNet Peering
+##  VNet Peering
 
 `vnet-westeurope-1` und `vnet-test` wurden über bidirektionales **VNet Peering** verbunden.
 
@@ -80,7 +80,7 @@ Azure stellt die notwendigen Peering-Routen automatisch bereit. Eine permanente 
 
 ---
 
-## 🌐 Private DNS
+##  Private DNS
 
 Private DNS Zone:
 
@@ -99,7 +99,7 @@ Die Namensauflösung wurde innerhalb von `VM-A` erfolgreich mit `nslookup` valid
 
 ---
 
-## 🔍 Troubleshooting
+##  Troubleshooting
 
 ### NSG-Fehlerszenario
 
@@ -153,7 +153,7 @@ Die temporäre Route Table wurde nach dem Troubleshooting vollständig entfernt.
 
 ---
 
-## ✅ Validierung
+##  Validierung
 
 Praktisch geprüft wurden:
 
@@ -173,7 +173,7 @@ Praktisch geprüft wurden:
 
 ---
 
-## ⚠️ Noch nicht umgesetzt
+##  Noch nicht umgesetzt
 
 Ein echter VM-zu-VM-Traffic zwischen beiden VNets wurde noch nicht durchgeführt, da im `vnet-test` keine zusätzliche VM bereitgestellt wurde.
 
@@ -189,16 +189,6 @@ werden nur dann ergänzt, wenn sie im weiteren Master Lab einen sinnvollen End-t
 
 ---
 
-## ➡️ Nächster Schritt
+## Nächste Schritte
 
-Die bestehende Netzwerkarchitektur bildet die Grundlage für das Storage-Lab.
-
-Insbesondere werden weiterverwendet:
-
-* `testostorageb`
-* `vnet-westeurope-1`
-* `snet-app-westeurope-1`
-* `VM-A`
-* bestehende DNS- und Netzwerkstruktur
-
-Als nächste Erweiterung folgt die Integration von Azure Storage mit **Private Endpoint und Private DNS**.
+Die bestehende Netzwerkarchitektur wird im Storage-Lab um Private Endpoint und Private DNS erweitert.
