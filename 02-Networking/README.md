@@ -1,4 +1,4 @@
-#  02 – Networking
+# 🌐 02 – Networking
 
 Erweiterung der bestehenden Azure-Umgebung um **Netzwerksegmentierung, VNet Peering, Network Security, Private DNS und Routing-Troubleshooting**.
 
