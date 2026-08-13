@@ -6,7 +6,7 @@ Die Umgebung wird schrittweise als zusammenhängende Azure-Architektur in **West
 
 ---
 
-## 🚀 Projektstatus
+##  Projektstatus
 
 * ✅ Identity & Governance
 * ✅ Networking
