@@ -1,4 +1,4 @@
-# ☁️ Azure AZ-104 Master Lab
+# ☁️ Azure Infrastructure Portfolio
 
 Praxisorientiertes Azure-Infrastrukturprojekt mit Fokus auf **Administration, Networking, Security und Troubleshooting**.
 
@@ -16,7 +16,7 @@ Die Umgebung wird schrittweise als zusammenhängende Azure-Architektur in **West
 
 ---
 
-## 🏗️ Architektur
+##  Architektur
 
 ```text
 VM-A
@@ -32,7 +32,7 @@ Storage: testostorageb
 
 ---
 
-## 🛠️ Azure Skills
+##  Azure Skills
 
 `Azure RBAC` · `Managed Identity` · `Azure Policy` · `Resource Locks`
 `VNet Peering` · `NSG` · `ASG` · `Private DNS` · `Network Watcher`
@@ -49,7 +49,7 @@ Storage: testostorageb
 
 ---
 
-## 🎯 Ziel
+##  Ziel
 
 Aufbau einer Azure-Umgebung, die ich **bereitstellen, absichern, validieren und systematisch troubleshootieren** kann.
 
