@@ -10,8 +10,8 @@ Die Umgebung wird schrittweise als zusammenhängende Azure-Architektur in **West
 
 * ✅ Identity & Governance
 * ✅ Networking
-* 🔄 Storage
-* ⏳ Compute
+* ✅ Storage
+* 🔄 Compute
 * ⏳ Monitoring
 
 ---
@@ -34,8 +34,9 @@ Storage: testostorageb
 
 ##  Azure Skills
 
-`Azure RBAC` · `Managed Identity` · `Azure Policy` · `Resource Locks`
-`VNet Peering` · `NSG` · `ASG` · `Private DNS` · `Network Watcher`
+`Azure RBAC` · `Managed Identity` · `Azure Policy` · `Resource Locks`  
+`VNet Peering` · `NSG` · `ASG` · `Private DNS` · `Network Watcher`  
+`Blob Storage` · `Azure Files` · `Private Endpoint` · `Lifecycle Management`
 
 ---
 
@@ -43,8 +44,8 @@ Storage: testostorageb
 
 * [01 – Identity & Governance](./01-Identity-Governance/)
 * [02 – Networking](./02-Networking/)
-* **03 – Storage** 🔄
-* **04 – Compute** ⏳
+* [03 – Storage](./03-Storage/) 
+* **04 – Compute** 🔄
 * **05 – Monitoring** ⏳
 
 ---
