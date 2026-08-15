@@ -1,4 +1,4 @@
-# ☁️ Azure Infrastructure Portfolio
+# ☁️ Azure AZ-104 Master Lab
 
 Praxisorientiertes Azure-Infrastrukturprojekt mit Fokus auf **Administration, Networking, Security und Troubleshooting**.
 
@@ -6,52 +6,59 @@ Die Umgebung wird schrittweise als zusammenhängende Azure-Architektur in **West
 
 ---
 
-##  Projektstatus
+## 🚀 Projektstatus
 
-* ✅ Identity & Governance
-* ✅ Networking
-* ✅ Storage
-* 🔄 Compute
-* ⏳ Monitoring
+- ✅ Identity & Governance
+- ✅ Networking
+- ✅ Storage
+- ✅ Compute
+- 🔄 Monitoring
 
 ---
 
-##  Architektur
+## 🏗️ Architektur
 
 ```text
-VM-A
-└── vnet-westeurope-1 (172.16.0.0/16)
-    ├── snet-westeurope-1
-    ├── snet-app-westeurope-1
-    └── VNet Peering
-        └── vnet-test (10.0.0.0/16)
-
-Private DNS: contoso.internal
-Storage: testostorageb
+VM-A ───────── VNet Peering ───────── VM-B
+ │                                      │
+ │                                      ├── Data Disk
+ │                                      └── Custom Script Extension
+ │
+ └── vnet-westeurope-1                  └── vnet-test
+     ├── snet-westeurope-1                  10.0.0.0/16
+     └── snet-app-westeurope-1
+              │
+              ├── Blob Private Endpoint
+              └── File Private Endpoint
+                        │
+                        ▼
+                  testostorageb
 ```
 
 ---
 
-##  Azure Skills
+## 🛠️ Azure Skills
 
 `Azure RBAC` · `Managed Identity` · `Azure Policy` · `Resource Locks`  
 `VNet Peering` · `NSG` · `ASG` · `Private DNS` · `Network Watcher`  
-`Blob Storage` · `Azure Files` · `Private Endpoint` · `Lifecycle Management`
+`Blob Storage` · `Azure Files` · `Private Endpoint` · `Lifecycle Management`  
+`Virtual Machines` · `Managed Disks` · `VM Extensions` · `VM Scale Sets`  
+`App Service` · `Deployment Slots`
 
 ---
 
 ## 📂 Labs
 
-* [01 – Identity & Governance](./01-Identity-Governance/)
-* [02 – Networking](./02-Networking/)
-* [03 – Storage](./03-Storage/) 
-* **04 – Compute** 🔄
-* **05 – Monitoring** ⏳
+- [01 – Identity & Governance](./01-Identity-Governance/)
+- [02 – Networking](./02-Networking/)
+- [03 – Storage](./03-Storage/)
+- [04 – Compute](./04-Compute/) ✅
+- **05 – Monitoring** 🔄
 
 ---
 
-##  Ziel
+## 🎯 Ziel
 
 Aufbau einer Azure-Umgebung, die ich **bereitstellen, absichern, validieren und systematisch troubleshootieren** kann.
 
-Nach Abschluss folgen **End-to-End-Szenarien** und **Infrastructure as Code**.
+Nach Monitoring folgen **End-to-End-Szenarien, gezieltes Schließen offener Architektur-Lücken und Infrastructure as Code**.
