@@ -6,7 +6,7 @@ Die Umgebung wird schrittweise als zusammenhängende Azure-Architektur in **West
 
 ---
 
-## 🚀 Projektstatus
+##  Projektstatus
 
 - ✅ Identity & Governance
 - ✅ Networking
@@ -16,7 +16,7 @@ Die Umgebung wird schrittweise als zusammenhängende Azure-Architektur in **West
 
 ---
 
-## 🏗️ Architektur
+##  Architektur
 
 ```text
 VM-A ───────── VNet Peering ───────── VM-B
@@ -37,7 +37,7 @@ VM-A ───────── VNet Peering ───────── VM-B
 
 ---
 
-## 🛠️ Azure Skills
+##  Azure Skills
 
 `Azure RBAC` · `Managed Identity` · `Azure Policy` · `Resource Locks`  
 `VNet Peering` · `NSG` · `ASG` · `Private DNS` · `Network Watcher`  
@@ -47,17 +47,17 @@ VM-A ───────── VNet Peering ───────── VM-B
 
 ---
 
-## 📂 Labs
+##  Labs
 
 - [01 – Identity & Governance](./01-Identity-Governance/)
 - [02 – Networking](./02-Networking/)
 - [03 – Storage](./03-Storage/)
-- [04 – Compute](./04-Compute/) ✅
+- [04 – Compute](./04-Compute/) 
 - **05 – Monitoring** 🔄
 
 ---
 
-## 🎯 Ziel
+##  Ziel
 
 Aufbau einer Azure-Umgebung, die ich **bereitstellen, absichern, validieren und systematisch troubleshootieren** kann.
 
