@@ -54,4 +54,4 @@ Azure Monitor
 ---
 
 ## Projektfokus
-Nicht nur Ressourcen bereitstellen, sondern Azure-Infrastruktur technisch begründen, absichern, überwachen, validieren und systematisch troubleshootieren.
+Azure-Infrastruktur selbst aufbauen, absichern, testen und Fehler gezielt nachvollziehen
