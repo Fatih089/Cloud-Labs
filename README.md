@@ -1,64 +1,57 @@
-# ☁️ Azure AZ-104 Master Lab
+# ☁️  Azure Infrastructure Lab
 
-Praxisorientiertes Azure-Infrastrukturprojekt mit Fokus auf **Administration, Networking, Security und Troubleshooting**.
+Praxisorientiertes Azure-Infrastrukturprojekt mit Fokus auf **Administration, Networking, Security, Monitoring und Troubleshooting**.
 
-Die Umgebung wird schrittweise als zusammenhängende Azure-Architektur in **West Europe** aufgebaut, validiert und erweitert.
-
----
-
-##  Projektstatus
-
-- ✅ Identity & Governance
-- ✅ Networking
-- ✅ Storage
-- ✅ Compute
-- 🔄 Monitoring
+Aufgebaut wurde eine zusammenhängende Azure-Umgebung in **West Europe**, in der die einzelnen Services bewusst miteinander verbunden und praktisch validiert wurden.
 
 ---
 
-##  Architektur
-
-```text
-VM-A ───────── VNet Peering ───────── VM-B
- │                                      │
- │                                      ├── Data Disk
- │                                      └── Custom Script Extension
- │
- └── vnet-westeurope-1                  └── vnet-test
-     ├── snet-westeurope-1                  10.0.0.0/16
-     └── snet-app-westeurope-1
-              │
-              ├── Blob Private Endpoint
-              └── File Private Endpoint
-                        │
-                        ▼
-                  testostorageb
-```
-
----
-
-##  Azure Skills
-
-`Azure RBAC` · `Managed Identity` · `Azure Policy` · `Resource Locks`  
-`VNet Peering` · `NSG` · `ASG` · `Private DNS` · `Network Watcher`  
-`Blob Storage` · `Azure Files` · `Private Endpoint` · `Lifecycle Management`  
-`Virtual Machines` · `Managed Disks` · `VM Extensions` · `VM Scale Sets`  
-`App Service` · `Deployment Slots`
-
----
-
-##  Labs
+## Projektbereiche
 
 - [01 – Identity & Governance](./01-Identity-Governance/)
 - [02 – Networking](./02-Networking/)
 - [03 – Storage](./03-Storage/)
-- [04 – Compute](./04-Compute/) 
-- **05 – Monitoring** 🔄
+- [04 – Compute](./04-Compute/)
+- [05 – Monitor & Maintain](./05-Monitoring/)
 
 ---
 
-##  Ziel
+## Architektur
 
-Aufbau einer Azure-Umgebung, die ich **bereitstellen, absichern, validieren und systematisch troubleshootieren** kann.
+```text
+VM-A                              VM-B
+ │                                  │
+ ▼                                  ▼
+vnet-westeurope-1 ── VNet Peering ── vnet-test
+ │
+ ├── snet-westeurope-1
+ │
+ └── snet-app-westeurope-1
+          │
+          ├── Blob Private Endpoint
+          └── File Private Endpoint
+                    │
+                    ▼
+              testostorageb
 
-Nach Monitoring folgen **End-to-End-Szenarien, gezieltes Schließen offener Architektur-Lücken und Infrastructure as Code**.
+Azure Monitor
+├── AMA + DCR
+├── Log Analytics
+├── Alerts
+└── Connection Monitor
+```
+
+---
+
+## Azure Skills
+
+`Azure RBAC` · `Managed Identity` · `Azure Policy`  
+`VNet Peering` · `NSG` · `ASG` · `Private DNS` · `Network Watcher`  
+`Blob Storage` · `Azure Files` · `Private Endpoints`  
+`Virtual Machines` · `Managed Disks` · `VM Extensions` · `VM Scale Sets`  
+`Azure Monitor` · `Log Analytics` · `KQL` · `Azure Backup`
+
+---
+
+## Projektfokus
+Nicht nur Ressourcen bereitstellen, sondern Azure-Infrastruktur technisch begründen, absichern, überwachen, validieren und systematisch troubleshootieren.
