@@ -2,85 +2,133 @@
 
 Erweiterung der bestehenden Azure-Umgebung um **Netzwerksegmentierung, VNet Peering, Network Security, Private DNS und Routing-Troubleshooting**.
 
-Die vorhandene Infrastruktur aus Identity & Governance wurde bewusst weiterverwendet und erweitert.
+Die vorhandene Infrastruktur aus Identity & Governance wurde weiterverwendet und später durch Compute, Storage und Monitoring End-to-End validiert.
 
 ---
 
-##  Netzwerkarchitektur
+## Netzwerkarchitektur
 
 ### `vnet-westeurope-1`
 
-* Address Space: `172.16.0.0/16`
-* `snet-westeurope-1` → `172.16.0.0/24`
-* `snet-app-westeurope-1` → `172.16.1.0/24`
+- Address Space: `172.16.0.0/16`
+- `snet-westeurope-1` → `172.16.0.0/24`
+- `snet-app-westeurope-1` → `172.16.1.0/24`
 
 ### `vnet-test`
 
-* Address Space: `10.0.0.0/16`
-* `default` → `10.0.0.0/24`
+- Address Space: `10.0.0.0/16`
+- `default` → `10.0.0.0/24`
 
 Beide Virtual Networks befinden sich in **West Europe** und sind bidirektional über **VNet Peering** verbunden.
 
----
-
-##  Umgesetzt
-
-* Erweiterung des bestehenden VNets um ein separates Application Subnet
-* Bidirektionales VNet Peering
-* Network Security Groups auf Subnet- und NIC-Ebene
-* Application Security Group für rollenbasierte NSG-Regeln
-* Private DNS Zone `contoso.internal`
-* VNet Links mit unterschiedlicher Auto-registration-Konfiguration
-* DNS Auto-registration für `VM-A`
-* Effective Routes
-* Network Watcher
-* `IP Flow Verify`
-* `Next Hop`
-* kontrolliertes NSG-Troubleshooting
-* kontrolliertes Routing-Troubleshooting mit User Defined Route
+```text
+VM-A                              VM-B
+172.16.0.x                        10.0.0.4
+    │                                │
+    ▼                                ▼
+vnet-westeurope-1 ── VNet Peering ── vnet-test
+    │
+    ├── snet-westeurope-1
+    │
+    └── snet-app-westeurope-1
+             │
+             ├── Blob Private Endpoint
+             └── File Private Endpoint
+```
 
 ---
 
-##  Network Security
+## Umgesetzt
 
-Für `VM-A` wurden Security Controls auf zwei Ebenen betrachtet:
+- Segmentierung des bestehenden VNets über mehrere Subnets
+- bidirektionales VNet Peering
+- Network Security Groups auf Subnet- und NIC-Ebene
+- Application Security Group für rollenbasierte NSG-Regeln
+- Private DNS Zone `contoso.internal`
+- VNet Links mit unterschiedlicher Auto-registration-Konfiguration
+- DNS Auto-registration für `VM-A`
+- Effective Routes
+- Network Watcher
+- `IP Flow Verify`
+- `Next Hop`
+- kontrolliertes NSG-Troubleshooting
+- kontrolliertes Routing-Troubleshooting mit User Defined Route
+- echter VM-zu-VM-Traffic über VNet Peering
+- Connection Monitor zwischen `VM-A` und `VM-B`
 
-* Subnet-NSG: `nsg-snet-westeurope-1`
-* NIC-NSG: `VM-A-nsg`
+---
 
-Damit wurde praktisch überprüft, dass ein Netzwerkfluss bei mehreren angewendeten NSGs die relevanten Regeln auf **beiden Ebenen** erfüllen muss.
+## Network Security
+
+Für `VM-A` wurden Security Controls auf zwei Ebenen eingesetzt:
+
+- Subnet-NSG: `nsg-snet-westeurope-1`
+- NIC-NSG: `VM-A-nsg`
+
+Damit wurde praktisch validiert, dass ein Netzwerkfluss bei mehreren angewendeten NSGs die relevanten Regeln auf **beiden Ebenen** erfüllen muss.
 
 ### Application Security Group
 
-`VM-A` wurde der ASG:
+`VM-A` wurde der Application Security Group:
 
 `asg-app-westeurope`
 
 zugeordnet.
 
-Eine NSG-Regel erlaubt HTTP-Traffic aus `10.0.0.0/16` gezielt zur ASG, ohne die private IP-Adresse der VM dauerhaft als Ziel definieren zu müssen.
+Eine NSG-Regel erlaubt HTTP-Traffic aus `10.0.0.0/16` gezielt zur ASG, ohne einzelne private IP-Adressen dauerhaft in rollenbezogenen Security Rules pflegen zu müssen.
 
-Dadurch können zukünftige Server anhand ihrer logischen Rolle gruppiert werden.
+Dadurch können Server anhand ihrer logischen Rolle gruppiert werden.
 
 ---
 
-##  VNet Peering
+## VNet Peering
 
 `vnet-westeurope-1` und `vnet-test` wurden über bidirektionales **VNet Peering** verbunden.
 
-Für das aktuelle Szenario wurde bewusst kein VPN Gateway verwendet.
+### Architekturentscheidung
 
-### Entscheidung
+**Entscheidung:** VNet Peering statt VPN Gateway
 
-**VNet Peering statt VPN Gateway**
+**Warum:** Beide Netzwerke befinden sich in Azure und benötigen eine direkte private Verbindung.
 
-**Grund:** Beide Netzwerke befinden sich in Azure und benötigen eine direkte private Verbindung. Ein VPN Gateway würde zusätzliche Komplexität und laufende Kosten erzeugen, ohne für dieses Szenario einen entsprechenden Mehrwert zu bieten.
+**Alternative:** VPN Gateway
 
-Azure stellt die notwendigen Peering-Routen automatisch bereit. Eine permanente User Defined Route zum Peer-VNet ist daher nicht erforderlich.
+**Warum nicht:** Für dieses Szenario unnötige Komplexität und zusätzliche laufende Kosten.
+
+Azure stellt für das Peering automatisch entsprechende System Routes bereit. Eine permanente User Defined Route zum Peer-VNet ist daher nicht erforderlich.
 
 ---
 
-##  Private DNS
+## End-to-End-Validierung
+
+Im späteren Compute-Lab wurde mit `VM-B` ein echter Endpunkt in `vnet-test` bereitgestellt.
+
+Anschließend wurde eine private SSH-Verbindung getestet:
+
+```text
+VM-A
+172.16.0.x
+    │
+    │ TCP 22
+    │ VNet Peering
+    ▼
+VM-B
+10.0.0.4
+```
+
+Die Verbindung war erfolgreich.
+
+Damit wurden praktisch validiert:
+
+- private VM-zu-VM-Kommunikation
+- VNet Peering
+- Azure Routing
+- NSG-Verhalten
+- tatsächlicher End-to-End-Traffic zwischen beiden VNets
+
+---
+
+## Private DNS
 
 Private DNS Zone:
 
@@ -88,107 +136,104 @@ Private DNS Zone:
 
 ### VNet Links
 
-* `vnet-westeurope-1` → Auto-registration aktiviert
-* `vnet-test` → Auto-registration deaktiviert
+- `vnet-westeurope-1` → Auto-registration aktiviert
+- `vnet-test` → Auto-registration deaktiviert
 
-Durch Auto-registration wurde für `VM-A` automatisch folgender Record erzeugt:
+Für `VM-A` wurde automatisch folgender Record registriert:
 
-`vm-a.contoso.internal → 172.16.0.4`
+```text
+vm-a.contoso.internal → 172.16.0.4
+```
 
-Die Namensauflösung wurde innerhalb von `VM-A` erfolgreich mit `nslookup` validiert.
+Die interne Namensauflösung wurde mit `nslookup` erfolgreich validiert.
 
----
-
-##  Troubleshooting
-
-### NSG-Fehlerszenario
-
-Bei einem SSH-Test erlaubte zunächst nur die Subnet-NSG TCP Port 22.
-
-Die NIC-NSG fiel weiterhin auf die standardmäßige `DenyAllInBound`-Regel zurück.
-
-**Ergebnis:** Die Verbindung wurde blockiert.
-
-Nach einer passenden Allow-Regel auf beiden relevanten Ebenen funktionierte die Verbindung.
-
-Die temporären SSH-Regeln wurden anschließend wieder entfernt.
+Im späteren Storage- und Compute-Lab wurde die DNS-Architektur zusätzlich um dienstspezifische Private-Link-Zonen erweitert.
 
 ---
 
-### ASG-Validierung
+## Routing-Troubleshooting
 
-Die Wirkung der Application Security Group wurde mit **Network Watcher – IP Flow Verify** geprüft.
+Für einen kontrollierten Fehler wurde temporär folgende User Defined Route erstellt:
 
-**VM-A Mitglied der ASG:**
-HTTP-Traffic wurde durch die ASG-basierte Allow-Regel erlaubt.
+```text
+Destination: 10.0.0.0/16
+Next Hop Type: None
+```
 
-**VM-A aus der ASG entfernt:**
-Der gleiche Traffic wurde durch die nachgelagerte Deny-Regel blockiert.
+`Effective Routes` zeigte die User Defined Route anschließend als aktiven Pfad.
 
-**VM-A erneut hinzugefügt:**
-Die Allow-Regel griff wieder.
+Network Watcher **Next Hop** bestätigte, dass Traffic zum Peer-VNet nicht mehr über den vorgesehenen Peering-Pfad weitergeleitet wurde.
 
-Damit wurde die Abhängigkeit zwischen ASG-Mitgliedschaft und NSG-Regel praktisch validiert.
+Nach Entfernen der fehlerhaften Route wurde wieder die automatisch von Azure bereitgestellte **VNet-Peering-Route** verwendet.
 
----
+### Erkenntnis
 
-### Routing-Fehlerszenario
-
-Temporär wurde folgende User Defined Route erstellt:
-
-**Destination:** `10.0.0.0/16`
-**Next Hop Type:** `None`
-
-`Effective Routes` zeigte anschließend die User Defined Route als aktive Route.
-
-Network Watcher **Next Hop** bestätigte, dass Traffic zum Peer-VNet nicht mehr den vorgesehenen Peering-Pfad verwendete.
-
-Nach Entfernen der temporären Route zeigte Azure wieder:
-
-`VNet peering`
-
-als effektiven Routing-Pfad.
-
-Die temporäre Route Table wurde nach dem Troubleshooting vollständig entfernt.
+User Defined Routes können Azure System Routes überschreiben.  
+`Effective Routes` und `Next Hop` ermöglichen eine gezielte Analyse des tatsächlich verwendeten Routing-Pfads.
 
 ---
 
-##  Validierung
+## NSG-Troubleshooting
 
-Praktisch geprüft wurden:
+Im späteren Compute- und Monitoring-Lab wurde der reale Pfad:
 
-* nicht überlappende VNet Address Spaces
-* bidirektionales VNet Peering
-* automatisch erzeugte Peering-Route
-* kombinierte Wirkung von Subnet- und NIC-NSGs
-* ASG-basierte NSG-Regeln
-* Private DNS Auto-registration
-* `vm-a.contoso.internal → 172.16.0.4`
-* DNS-Auflösung mit `nslookup`
-* Network Watcher `IP Flow Verify`
-* Network Watcher `Next Hop`
-* `Effective Routes`
-* Verhalten einer fehlerhaften User Defined Route
-* Wiederherstellung des korrekten Peering-Routings
+`VM-A → VM-B → TCP 22`
 
----
+für ein kontrolliertes Fehlerszenario verwendet.
 
-##  Noch nicht umgesetzt
+Eine temporäre Deny-Regel auf `nsg-vm-b` blockierte den SSH-Traffic.
 
-Ein echter VM-zu-VM-Traffic zwischen beiden VNets wurde noch nicht durchgeführt, da im `vnet-test` keine zusätzliche VM bereitgestellt wurde.
+### Analyse
 
-Weitere Netzwerkkomponenten wie:
+**Connection Monitor**
 
-* VPN Gateway / Gateway Transit
-* Azure Bastion
-* Application Gateway
-* Load Balancer
-* Connection Monitor
+- zeigte den Ausfall des Netzwerkpfads
 
-werden nur dann ergänzt, wenn sie im weiteren Master Lab einen sinnvollen End-to-End-Anwendungsfall erhalten.
+**IP Flow Verify**
+
+- Ergebnis: `Access denied`
+- verursachende NSG: `nsg-vm-b`
+- verursachende Regel: `BlockVM-A`
+
+Nach Entfernen der Regel war die Verbindung wieder erfolgreich.
+
+Im Normalzustand zeigte Connection Monitor:
+
+- Checks Failed: `0 %`
+- RTT: ca. `1,27 ms`
 
 ---
 
-## Nächste Schritte
+## Weiterverwendung im Master Lab
 
-Die bestehende Netzwerkarchitektur wird im Storage-Lab um Private Endpoint und Private DNS erweitert.
+Die Netzwerkarchitektur wurde von den folgenden Bereichen weiterverwendet:
+
+### Storage
+
+- Private Endpoints für Blob Storage und Azure Files
+- Nutzung von `snet-app-westeurope-1`
+- Private DNS für Azure Private Link
+
+### Compute
+
+- `VM-B` als zweiter Endpunkt in `vnet-test`
+- echter Traffic über VNet Peering
+- kontrolliertes NSG-Troubleshooting
+
+### Monitor & Maintain
+
+- Connection Monitor zwischen `VM-A` und `VM-B`
+- RTT- und Connectivity-Messung
+- Root-Cause-Analyse mit IP Flow Verify
+
+---
+
+## Ergebnis
+
+Die Networking-Schicht bildet die gemeinsame Connectivity-Basis des gesamten Master Labs.
+
+Praktisch umgesetzt und validiert wurden:
+
+**Segmentierung · Peering · Security · DNS · Routing · Private Connectivity · Monitoring · Troubleshooting**
+
+Die Netzwerkarchitektur wurde nicht isoliert betrachtet, sondern anschließend von Storage-, Compute- und Monitoring-Workloads produktionsähnlich weiterverwendet.
